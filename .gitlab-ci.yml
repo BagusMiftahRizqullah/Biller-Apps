@@ -1,0 +1,43 @@
+image: circleci/android:api-29-node
+
+stages:
+  - build-android
+  # - gradle-check
+
+default:
+  interruptible: true
+  before_script:
+    - yarn install --frozen-lockfile
+
+cache:
+  key:
+    files:
+      - yarn.lock
+  paths:
+    - node_modules
+    - .gradle
+    - gradle
+
+build-android:
+  stage: build-android
+  script:
+    - cd android && ./gradlew bundleRelease assembleRelease && cd ..
+    - curl -d chat_id="-552671696" -d text="Biller Build Successful from circleci" https://api.telegram.org/bot1714952086:AAHvvRiJZF8F5_KKxh45kk8Ma0W9EBA6Grc/sendMessage
+    - curl -d chat_id="-552671696" -d text="Biller Build APK Download link = https://gitlab.com/binarxglints_batch12/finalproject/team_b/reactnativeteam_b/-/jobs/artifacts/development/raw/android/app/build/outputs/apk/release/app-release.apk?job=build-android"  https://api.telegram.org/bot1714952086:AAHvvRiJZF8F5_KKxh45kk8Ma0W9EBA6Grc/sendMessage
+    - curl -d chat_id="-552671696" -d text="Biller Bundle AAB Download link (for playstore) = https://gitlab.com/binarxglints_batch12/finalproject/team_b/reactnativeteam_b/-/jobs/artifacts/development/raw/android/app/build/outputs/bundle/release/app-release.aab?job=build-android"  https://api.telegram.org/bot1714952086:AAHvvRiJZF8F5_KKxh45kk8Ma0W9EBA6Grc/sendMessage
+    # - curl -d chat_id="-1001512531633" -d text="Biller Build Successful from circleci" https://api.telegram.org/bot1714952086:AAHvvRiJZF8F5_KKxh45kk8Ma0W9EBA6Grc/sendMessage
+    # - curl -d chat_id="-1001512531633" -d text="Biller Build APK Download link = https://gitlab.com/binarxglints_batch12/finalproject/team_b/reactnativeteam_b/-/jobs/artifacts/development/raw/android/app/build/outputs/apk/release/app-release.apk?job=build-android"  https://api.telegram.org/bot1714952086:AAHvvRiJZF8F5_KKxh45kk8Ma0W9EBA6Grc/sendMessage
+    # - curl -d chat_id="-1001512531633" -d text="Biller Bundle AAB Download link (for playstore) = https://gitlab.com/binarxglints_batch12/finalproject/team_b/reactnativeteam_b/-/jobs/artifacts/development/raw/android/app/build/outputs/bundle/release/app-release.aab?job=build-android"  https://api.telegram.org/bot1714952086:AAHvvRiJZF8F5_KKxh45kk8Ma0W9EBA6Grc/sendMessage
+  artifacts:
+    paths:
+      - ./android/app/build/outputs/
+  # only:
+  # refs:
+  # - development
+  # changes:
+  # - src/**/*
+# check gradle
+
+# check-gradle:
+# stage: gradle-check
+# script: cd android && ./gradlew check && cd ..
