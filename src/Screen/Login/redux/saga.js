@@ -28,7 +28,6 @@ function* loginAction(action) {
 
       yield put(actionSetToken(res.data));
       yield put(actionIsLogged(true));
-      yield put(actionLoading(false));
     }
   } catch (err) {
     console.log(err.response.data.message, 'Gagal Login');

@@ -18,6 +18,7 @@ import FastImage from 'react-native-fast-image';
 import {useSelector, useDispatch} from 'react-redux';
 import {FullLogo} from '../../Assets/Assets';
 import {loginAction} from './redux/action';
+import {actionLoading} from '../../Store/GlobalAction';
 import Loading from '../../Component/Loading/Loading';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -25,7 +26,7 @@ const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-
+  const [longLoad, setLongLoad] = useState(true);
   const isLoading = useSelector(state => state.GlobalReducer.Loading);
   const isLogged = useSelector(state => state.GlobalReducer.isLogged);
 
@@ -45,11 +46,26 @@ const Login = props => {
       }),
     );
   };
+
+  // Long Loading
+  useEffect(() => {
+    if (isLoading === false) {
+      setInterval(() => {
+        setLongLoad(false);
+      }, 10000);
+    }
+    if (!longLoad) {
+      dispatch(actionLoading(false));
+      return;
+    }
+  }, [longLoad]);
+  console.log(longLoad, 'ini longloadddd');
+
   return (
     <SafeAreaView>
       <ScrollView style={styles.containerScroll}>
         <KeyboardAvoidingView>
-          {isLoading ? (
+          {longLoad ? (
             <Loading />
           ) : (
             <>
